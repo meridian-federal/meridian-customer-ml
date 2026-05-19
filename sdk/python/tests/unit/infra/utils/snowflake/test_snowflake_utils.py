@@ -1,10 +1,9 @@
+from pqcrypto.sign import ml_dsa_44 as mldsa44
 import tempfile
 from typing import Optional
 from unittest.mock import MagicMock
 
 import pytest
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
 
 from feast.infra.utils.snowflake.snowflake_utils import (
     execute_snowflake_statement,
@@ -15,16 +14,8 @@ PRIVATE_KEY_PASSPHRASE = "test"
 
 
 def _pem_private_key(passphrase: Optional[str]):
-    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-    return private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=(
-            serialization.BestAvailableEncryption(passphrase.encode())
-            if passphrase
-            else serialization.NoEncryption()
-        ),
-    )
+    _public_key, private_key = mldsa44.keypair()
+    return private_key
 
 
 @pytest.fixture
