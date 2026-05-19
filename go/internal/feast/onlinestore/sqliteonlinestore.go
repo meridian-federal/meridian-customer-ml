@@ -1,7 +1,6 @@
 package onlinestore
 
 import (
-	"crypto/sha1"
 	"database/sql"
 	"encoding/hex"
 	"errors"
@@ -20,6 +19,7 @@ import (
 
 	"github.com/feast-dev/feast/go/protos/feast/serving"
 	"github.com/feast-dev/feast/go/protos/feast/types"
+	"crypto/sha256"
 )
 
 type SqliteOnlineStore struct {
@@ -156,7 +156,7 @@ func hashSerializedEntityKey(serializedEntityKey *[]byte) string {
 	if serializedEntityKey == nil {
 		return ""
 	}
-	h := sha1.New()
+	h := sha256.New()
 	h.Write(*serializedEntityKey)
 	sha1_hash := hex.EncodeToString(h.Sum(nil))
 	return sha1_hash
