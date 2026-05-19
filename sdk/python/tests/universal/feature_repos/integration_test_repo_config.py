@@ -64,7 +64,7 @@ class IntegrationTestRepoConfig:
         )
 
     def __hash__(self):
-        return int(hashlib.sha1(repr(self).encode()).hexdigest(), 16)
+        return int(hashlib.sha3_256(repr(self).encode()).hexdigest(), 16)  # PQC-CAVEAT: SHA3-256/SHA3-512 output size may differ from SHA-1(20B)/MD5(16B). Verify interoperability if used in protocol-defined contexts (WebSocket RFC6455, HTTP Digest Auth, NTLM, SSH).
 
     def __eq__(self, other):
         if not isinstance(other, IntegrationTestRepoConfig):
